@@ -1,3 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NISM Exam Engine</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f4f7fb;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h1{
+text-align:center;
+color:#0f172a;
+}
+
+button{
+background:#2563eb;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+textarea{
+width:100%;
+height:350px;
+margin-top:15px;
+padding:10px;
+font-size:16px;
+}
+
+input{
+margin:15px 0;
+}
+
+.loader{
+display:none;
+margin-top:10px;
+font-weight:bold;
+color:#2563eb;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>NISM Exam Engine</h1>
+
+<p>AI Powered Exam Preparation Platform</p>
+
+<input type="file" id="pdfFile">
+
+<br><br>
+
+<button onclick="generateNotes()">
+Generate Notes
+</button>
+
+<div id="loading" class="loader">
+Generating Notes...
+</div>
+
+<textarea
+id="output"
+placeholder="Generated Notes Here...">
+</textarea>
+
+</div>
+
 <script>
 
 async function generateNotes(){
@@ -26,8 +116,6 @@ throw new Error("Server Error : " + response.status);
 
 const data = await response.json();
 
-console.log(data);
-
 output.value =
 data.result ||
 data.message ||
@@ -45,3 +133,6 @@ loading.style.display = "none";
 }
 
 </script>
+
+</body>
+</html>
