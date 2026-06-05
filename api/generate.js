@@ -1,6 +1,15 @@
 export default async function handler(req, res) {
 
+  if (req.method !== "POST") {
+    return res.status(200).json({
+      message: "API Running Successfully"
+    });
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
+
+  // बाकी code...
+}
 
   if (!apiKey) {
     return res.status(500).json({
