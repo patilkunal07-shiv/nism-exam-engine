@@ -1,5 +1,7 @@
 export default async function handler(req, res) {
 
+  console.log("API STARTED");
+
   if (req.method !== "POST") {
     return res.status(200).json({
       message: "API Running Successfully"
@@ -14,9 +16,9 @@ export default async function handler(req, res) {
     });
   }
 
-  const { prompt } = req.body;
-
   try {
+
+    const { prompt } = req.body;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
             {
               parts: [
                 {
-                  text: prompt
+                  text: prompt || "Create NISM exam notes"
                 }
               ]
             }
@@ -41,18 +43,22 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    const text =
+    console.log("Gemini Response:", data);
+
+    const result =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response";
+      "No response from Gemini";
 
     return res.status(200).json({
-      result: text
+      result
     });
 
-  } catch (err) {
+  } catch (error) {
+
+    console.error(error);
 
     return res.status(500).json({
-      error: err.message
+      error: error.message
     });
 
   }
