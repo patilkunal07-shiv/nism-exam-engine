@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>NISM Exam Engine</title>
 
 <style>
-
 body{
 font-family:Arial,sans-serif;
 background:#f4f7fb;
@@ -48,14 +44,21 @@ width:100%;
 height:350px;
 margin-top:15px;
 padding:10px;
-font-size:15px;
+font-size:16px;
 }
 
 input{
 margin:15px 0;
 }
 
+.loader{
+display:none;
+margin-top:10px;
+font-weight:bold;
+color:#2563eb;
+}
 </style>
+
 </head>
 
 <body>
@@ -74,10 +77,14 @@ margin:15px 0;
 Generate Notes
 </button>
 
+<div id="loading" class="loader">
+Generating Notes...
+</div>
+
 <textarea
 id="output"
-placeholder="Generated Notes Here..."
-></textarea>
+placeholder="Generated Notes Here...">
+</textarea>
 
 </div>
 
@@ -85,45 +92,55 @@ placeholder="Generated Notes Here..."
 
 async function generateNotes(){
 
-const output=document.getElementById("output");
+const output = document.getElementById("output");
+const loading = document.getElementById("loading");
 
-output.value="Generating Notes... Please Wait";
+loading.style.display = "block";
+
+output.value = "";
 
 try{
 
-const response=await fetch("/api/generate",{
+const response = await fetch("/api/generate",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-prompt:`
-Create NISM Exam Notes.
-
-Give:
-
-1. Short Notes
-2. Long Notes
-3. Important Exam Points
-4. Memory Tricks
-5. 10 MCQs With Answers
-6. Revision Summary
-
-Use Easy English.
-`
+prompt:"Create NISM exam short notes, important points, revision notes and MCQs."
 })
 });
 
-const data=await response.json();
+const data = await response.json();
 
-output.value=data.result || data.error;
+if(data.result){
 
-}
-catch(error){
-
-output.value=error.message;
+output.value = data.result;
 
 }
+else if(data.message){
+
+output.value = data.message;
+
+}
+else if(data.error){
+
+output.value = data.error;
+
+}
+else{
+
+output.value = JSON.stringify(data,null,2);
+
+}
+
+}catch(err){
+
+output.value = "ERROR : " + err.message;
+
+}
+
+loading.style.display = "none";
 
 }
 
